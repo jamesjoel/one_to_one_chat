@@ -1,0 +1,55 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    var chatWith;
+    socket.on("onlineUser", function(data){
+        allUser=data;
+        console.log(data);
+        $("#showOnlineUser").html("");
+        for(key in data){
+            $("#showOnlineUser").append("<a href='#' class='list-group-item'>"+key+"</a>");
+        }
+    });  
+
+    $('body').on('click', '#showOnlineUser a', function(){
+        chatWith = $(this).html();
+        $("#chatWith").html(chatWith);
+    });
+    $('body').on('click', '#sendBtn', function(){
+        $("#showMsg").append('<p><b>You ('+chatWith+')</b> : '+$("#msgTxt").val()+'</p>');
+        var sendObj = { msg : $("#msgTxt").val(), to : chatWith, from :  $("#me").html()};
+        socket.emit("send", sendObj);
+
+    });
+
+
+    socket.on("throw", function(recData){
+        var msgStr= '<p><b>'+recData.from+'</b> : '+recData.msg+'</p>';
+        $("#showMsg").append(msgStr);  
+    });
+  
+    
+</script>
+<div class="row">
+    <h4>Welcome To TSS Chat Box <span id="me" class="label label-warning text-uppercase pull-right"><%= session.username %></span></h4>
+    <div class="col-md-3">
+        <div class="list-group" id="showOnlineUser">
+            
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>Chat Box : <span class="label label-info" id="chatWith"></span></h4>
+            </div>
+            <div class="panel-body" id="showMsg" style="min-height:350px; overflow-y:scroll">
+
+            </div>
+            <div class="panel-footer">
+                <input type="text" class="form-control" placeholder="Your Message" id="msgTxt" />
+                <br />
+                <button id="sendBtn" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
