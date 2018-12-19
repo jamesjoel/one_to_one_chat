@@ -16,7 +16,6 @@ app.use(cookieParser());
 app.use(session({ secret : "james"}));
 app.use(flash());
 app.use(nocache());
-var userArr = [];
 app.use(function(req, res, next){
     res.locals.session=req.session;
     next();

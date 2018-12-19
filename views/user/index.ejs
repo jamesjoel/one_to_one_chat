@@ -2,6 +2,10 @@
 <script>
     var socket = io();
     var chatWith;
+
+
+
+
     socket.on("onlineUser", function(data){
         allUser=data;
         console.log(data);
@@ -9,18 +13,49 @@
         for(key in data){
             $("#showOnlineUser").append("<a href='#' class='list-group-item'>"+key+"</a>");
         }
-    });  
+    }); 
+
+
+
+
+
+
+
 
     $('body').on('click', '#showOnlineUser a', function(){
         chatWith = $(this).html();
         $("#chatWith").html(chatWith);
     });
+
+
+
+
+
+
+
+
     $('body').on('click', '#sendBtn', function(){
+
+
         $("#showMsg").append('<p><b>You ('+chatWith+')</b> : '+$("#msgTxt").val()+'</p>');
+
+
+
+
         var sendObj = { msg : $("#msgTxt").val(), to : chatWith, from :  $("#me").html()};
         socket.emit("send", sendObj);
 
+    
+
+
+
+
+
     });
+
+
+
+
 
 
     socket.on("throw", function(recData){
